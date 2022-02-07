@@ -150,8 +150,14 @@
 #pragma mark - AVCaptureSession Delegate -
 - (void)captureOutput:(AVCaptureOutput *)output didOutputSampleBuffer:(CMSampleBufferRef)sampleBuffer fromConnection:(AVCaptureConnection *)connection
 {
-    
-    
+    /*
+     * 拍摄返回sampleBuffer
+     * sampleBuffer 转为image
+     * image转为opencv的mat
+     * 传递sampleBuffer，通过第三方库dlib来获取人脸关键点
+     * 给mat增加关键点和框
+     * 再把mat转回img,显示到imageview上
+     */
     
     NSMutableArray *bounds = [NSMutableArray arrayWithCapacity:0];
     for (AVMetadataFaceObject *faceobject in self.currentMetadata) {
@@ -165,13 +171,13 @@
     
     NSArray *facesLandmarks = [_dr detecitonOnSampleBuffer:sampleBuffer inRects:bounds];
     
-    std::vector< std::vector<cv::Point> >  co_ordinates;
-
-    CGPoint mouthCenter ;
-    CGPoint leftCenter ;
-    CGPoint rightCenter ;
-    CGFloat mouthWith = 0;
-    co_ordinates.push_back(std::vector<cv::Point>());
+//    std::vector< std::vector<cv::Point> >  co_ordinates;
+//
+//    CGPoint mouthCenter ;
+//    CGPoint leftCenter ;
+//    CGPoint rightCenter ;
+//    CGFloat mouthWith = 0;
+//    co_ordinates.push_back(std::vector<cv::Point>());
     for (NSArray *landmarks in facesLandmarks) {
         
         for (int i = 0; i < landmarks.count; i++) {
@@ -182,19 +188,19 @@
    
         }
         
-        CGFloat mouthCenterX = abs([landmarks[48] CGPointValue].x - [landmarks[54] CGPointValue].x) / 2 + [landmarks[48] CGPointValue].x;
-        CGFloat mouthCenterY = abs([landmarks[51] CGPointValue].y - [landmarks[57] CGPointValue].y) / 2 + [landmarks[51] CGPointValue].y;
-        mouthWith = abs([landmarks[48] CGPointValue].x - [landmarks[54] CGPointValue].x);
-        mouthCenter = CGPointMake(mouthCenterX, mouthCenterY);
-        
-        CGFloat leftCenterX = abs([landmarks[36] CGPointValue].x - [landmarks[39] CGPointValue].x) / 2 + [landmarks[36] CGPointValue].x;
-        CGFloat leftCenterY = (abs([landmarks[37] CGPointValue].y - [landmarks[41] CGPointValue].y)) / 2 + [landmarks[37] CGPointValue].y;
-        leftCenter = CGPointMake(leftCenterX, leftCenterY);
-        
-        
-        CGFloat rightCenterX = abs([landmarks[42] CGPointValue].x - [landmarks[45] CGPointValue].x) / 2 + [landmarks[42] CGPointValue].x;
-        CGFloat rightCenterY = (abs([landmarks[44] CGPointValue].y - [landmarks[46] CGPointValue].y)) / 2 + [landmarks[44] CGPointValue].y;
-        rightCenter = CGPointMake(rightCenterX, rightCenterY);
+//        CGFloat mouthCenterX = abs([landmarks[48] CGPointValue].x - [landmarks[54] CGPointValue].x) / 2 + [landmarks[48] CGPointValue].x;
+//        CGFloat mouthCenterY = abs([landmarks[51] CGPointValue].y - [landmarks[57] CGPointValue].y) / 2 + [landmarks[51] CGPointValue].y;
+//        mouthWith = abs([landmarks[48] CGPointValue].x - [landmarks[54] CGPointValue].x);
+//        mouthCenter = CGPointMake(mouthCenterX, mouthCenterY);
+//
+//        CGFloat leftCenterX = abs([landmarks[36] CGPointValue].x - [landmarks[39] CGPointValue].x) / 2 + [landmarks[36] CGPointValue].x;
+//        CGFloat leftCenterY = (abs([landmarks[37] CGPointValue].y - [landmarks[41] CGPointValue].y)) / 2 + [landmarks[37] CGPointValue].y;
+//        leftCenter = CGPointMake(leftCenterX, leftCenterY);
+//
+//
+//        CGFloat rightCenterX = abs([landmarks[42] CGPointValue].x - [landmarks[45] CGPointValue].x) / 2 + [landmarks[42] CGPointValue].x;
+//        CGFloat rightCenterY = (abs([landmarks[44] CGPointValue].y - [landmarks[46] CGPointValue].y)) / 2 + [landmarks[44] CGPointValue].y;
+//        rightCenter = CGPointMake(rightCenterX, rightCenterY);
     }
     
     for (NSValue *rect in bounds) {
