@@ -177,7 +177,8 @@
         for (int i = 0; i < landmarks.count; i++) {
             NSValue *point = landmarks[i];
             CGPoint p = [point CGPointValue];
-            cv::rectangle(mat, cv::Rect(p.x,p.y,4,4), cv::Scalar(0,255,0,255),-1);
+            // 画关键点
+            cv::rectangle(mat, cv::Rect(p.x,p.y,4,4), cv::Scalar(0,255,255,255),-1);
    
         }
         
@@ -199,7 +200,7 @@
     for (NSValue *rect in bounds) {
         CGRect r = [rect CGRectValue];
         //画框
-        cv::rectangle(mat, cv::Rect(r.origin.x,r.origin.y,r.size.width,r.size.height), cv::Scalar(0,255,0,255));
+        cv::rectangle(mat, cv::Rect(r.origin.x,r.origin.y,r.size.width,r.size.height), cv::Scalar(255,0,0,255));
 
     }
     
